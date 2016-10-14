@@ -15,3 +15,4 @@ clean:
 run:
 	make
 	./main.out
+	python plot.py
