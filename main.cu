@@ -1,6 +1,6 @@
 #include <stdio.h>
-#define NX 128
-#define NY 128
+#define NX 256
+#define NY 256
 #define DX (5./(float)NX)
 #define DY (5./(float)NY)
 #define N_ITERATIONS 100000
@@ -107,6 +107,14 @@ int main()
     dim3 threads(N_THREADS_X, N_THREADS_Y);
     gpuErrchk(cudaPeekAtLastError());
     gpuErrchk(cudaDeviceSynchronize());
+
+
+    cudaEvent_t start;
+    gpuErrchk(cudaEventCreate(&start));
+    cudaEvent_t stop;
+    gpuErrchk(cudaEventCreate(&stop));
+
+    gpuErrchk(cudaEventRecord(start, NULL));
     for (int i = 0; i < N_ITERATIONS; i += 2)
     {
         printf("\rIteration %5d", i);
@@ -117,6 +125,10 @@ int main()
         gpuErrchk(cudaPeekAtLastError());
         gpuErrchk(cudaDeviceSynchronize());
     }
+    gpuErrchk(cudaEventRecord(stop, NULL));
+
+
+
 
     //copy V2 from device to host as final value
     gpuErrchk(cudaMemcpy(h_source, d_source, NX*NY*sizeof(float), cudaMemcpyDeviceToHost));
@@ -125,6 +137,10 @@ int main()
     gpuErrchk(cudaFree(d_V1));
     gpuErrchk(cudaFree(d_V2));
 
+    float msecTotal = 0.0f;
+    gpuErrchk(cudaEventElapsedTime(&msecTotal, start, stop));
+    printf("Elapsed time: %f ms", msecTotal);
+    
     FILE* file_V1 = fopen("V1.dat", "w");
     FILE* file_source = fopen("source.dat", "w");
 
