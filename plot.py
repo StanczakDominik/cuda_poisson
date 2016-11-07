@@ -1,7 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-datasets = [("init_V1.dat", "init_source.dat"),("V1.dat", "source.dat")]
+datasets = [
+            # ("init_V1.dat", "init_source.dat"),
+            ("V1.dat", "source.dat"),
+            ]
 for dataset in datasets:
     for filename in dataset:
         data = np.loadtxt(filename)
