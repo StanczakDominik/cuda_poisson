@@ -1,5 +1,5 @@
 NVCC = nvcc
-NVCC_FLAGS = -arch=sm_20 -rdc=true  --use_fast_math -lcufft -g -G
+NVCC_FLAGS = -arch=sm_20 -rdc=true  --use_fast_math -lcufft -g -G -Wno-deprecated-gpu-targets
 
 all: main.out
 
